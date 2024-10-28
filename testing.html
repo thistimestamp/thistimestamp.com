@@ -6,11 +6,12 @@
     </title>
     <script type="text/javascript">
       function tick() {
-        console.log(new Date());
+        var clockFace = document.getElementById("clockFace");
+        clockFace.innerHTML = new Date().toString();
         setTimeout(tick);
       }
 
-      console.log("Hello World!");
+      tick();
     </script>
   </head>
   <body>
