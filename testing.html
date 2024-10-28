@@ -5,10 +5,14 @@
       ThisTimeStamp - Testing
     </title>
     <script type="text/javascript">
-      function tick() {
+      function refreshClockFace() {
         var clockFace = document.getElementById("clockFace");
         clockFace.innerHTML = new Date().toString();
-        setTimeout(tick);
+      }
+
+      function tick() {
+        refreshClockFace();
+        setTimeout(tick, 1000 * 0.3);
       }
 
       document.addEventListener("DOMContentLoaded", tick);
