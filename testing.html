@@ -5,9 +5,15 @@
       ThisTimeStamp - Testing
     </title>
     <script type="text/javascript">
+      function tick() {
+        console.log(new Date());
+        setTimeout(tick);
+      }
+
       console.log("Hello World!");
     </script>
   </head>
   <body>
+    <p id="#clockFace"></p>
   </body>
 </html>
