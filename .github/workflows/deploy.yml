@@ -78,7 +78,7 @@ jobs:
           tee version.txt << EOF
           Deployed: $(date --universal +'%FT%TZ')
           Version: v0.0.${{ github.run_number }}.$((${{ github.run_attempt }} - 1))
-          Source: ${{github.server_url }}/${{ github.repository }}/tree/$(echo "${{ github.sha }}" | head -c 7)
+          Source: ${{ github.server_url }}/${{ github.repository }}/tree/$(echo "${{ github.sha }}" | head -c 7)
           EOF
 
       - name: "Generate a sitemap.txt file"
