@@ -52,7 +52,7 @@ jobs:
         name: "Get Details of Latest Release"
         run: gh api "${ENDPOINT}" --jq "${JQ_QUERY}" | tee -a "${GITHUB_OUTPUT}"
         env:
-          ENDPOINT: '/repos/${{ vars.REPO_WITH_RELEASES }}/releases/latest'
+          ENDPOINT: '/repos/${{ github.repository }}/releases/latest'
           JQ_QUERY: '"tag_name=" + (.tag_name | tostring)'
 
       - name: "Generate an authors.yaml file"
