@@ -54,7 +54,7 @@ jobs:
         env:
           GH_REPO: '${{ github.repository }}'
           JQ_PROPS: 'tagName'
-          JQ_QUERY: '"tag_name=" + (.tag_name | tostring)'
+          JQ_QUERY: '"tag_name=" + (.tagName | tostring)'
 
       - name: "Generate an authors.yaml file"
         run: gh api "${ENDPOINT}" --jq "${JQ_QUERY}" | tee authors.yaml
