@@ -50,9 +50,10 @@ jobs:
 
       - id: latest-release
         name: "Get Details of Latest Release"
-        run: gh api "${ENDPOINT}" --jq "${JQ_QUERY}" | tee -a "${GITHUB_OUTPUT}"
+        run: gh release view --json "${JQ_PROPS}" --jq "${JQ_QUERY}" | tee -a "${GITHUB_OUTPUT}"
         env:
-          ENDPOINT: '/repos/${{ github.repository }}/releases/latest'
+          GH_REPO: '${{ github.repository }}'
+          JQ_PROPS: 'tagName'
           JQ_QUERY: '"tag_name=" + (.tag_name | tostring)'
 
       - name: "Generate an authors.yaml file"
