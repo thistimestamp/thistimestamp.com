@@ -64,12 +64,35 @@ jobs:
             title: Changelog
             ...
 
-            {{range .}}
-            ## [{{.name}}](${{ github.server_url }}/${{ github.repository }}/releases/tag/{{.tag_name}})
+            {{ range . -}}
 
-            {{.body}}
+            ## [{{.name}}]({{ .html_url }})
 
-            {{end}}
+            {{- if .draft -}}
+            {{ " " }}![This is a draft release.](https://img.shields.io/badge/DRAFT-grey)
+            {{- else if .prerelease -}}
+            {{ " " }}![This is a pre-release.](https://img.shields.io/badge/PRE--RELEASE-orange)
+            {{- else if eq .tag_name "${{ steps.latest-release.outputs.tag_name }}" -}}
+            {{ " " }}![This is the latest release.](https://img.shields.io/badge/LATEST-green)
+            {{- end }}
+
+            {{ .body }}
+
+            {{ if .assets -}}
+
+            ### Asset Downloads
+
+            {{- "\n" -}}
+
+            {{ range .assets }}
+            - [{{ or .label .name }}]({{ .browser_download_url }})
+            {{- end }}
+
+            {{ end }}
+
+            {{- end }}
+
+            {{- /* noop */ -}}
 
       - name: "Create generated HTML files"
         run: |
