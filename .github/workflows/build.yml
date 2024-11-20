@@ -48,6 +48,13 @@ jobs:
           MEDIA_TYPE_HEADER: "Accept: application/vnd.github.raw"
           AUTH_TOKEN_HEADER: "Authorization: Bearer ${{ github.token }}"
 
+      - id: latest-release
+        name: "Get Details of Latest Release"
+        run: gh api "${ENDPOINT}" --jq "${JQ_QUERY}" | tee -a "${GITHUB_OUTPUT}"
+        env:
+          ENDPOINT: '/repos/${{ vars.REPO_WITH_RELEASES }}/releases/latest'
+          JQ_QUERY: '"tag_name=" + (.tag_name | tostring)'
+
       - name: "Generate an authors.yaml file"
         run: gh api "${ENDPOINT}" --jq "${JQ_QUERY}" | tee authors.yaml
         env:
