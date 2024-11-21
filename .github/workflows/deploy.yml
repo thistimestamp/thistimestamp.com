@@ -21,10 +21,12 @@ env:
 
 jobs:
   build:
+    name: "Build GitHub Pages"
     uses: ./.github/workflows/build.yml
 
   deploy:
     if: github.ref_name == 'main'
+    name: "Deploy GitHub Pages"
     needs: build
     runs-on: ubuntu-latest
 
