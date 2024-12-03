@@ -78,7 +78,7 @@ jobs:
         run: |
           tee robots.txt << EOF
           # Block AI Crawlers (see: https://github.com/ai-robots-txt)
-          $(gh api '/repos/ai-robots-txt/ai.robots.txt/contents/robots.txt' --jq '.content | @base64d')
+          $(gh release download --repo ai-robots-txt/ai.robots.txt --pattern 'robots.txt' --output -)
 
           # List of pages and files
           Sitemap: ${{ steps.configure-pages.outputs.base_url }}/sitemap.txt
