@@ -62,6 +62,22 @@ jobs:
           ENDPOINT: '/repos/${{ github.repository }}/contributors'
           JQ_QUERY: '"author-meta:" + (["", (.[] | .login)] | join("\n- "))'
 
+      - name: "Generate a humans.txt file"
+        run: gh api "${ENDPOINT}" --template "${TEMPLATE}" | sh | tee humans.txt
+        env:
+          ENDPOINT: '/orgs/${{ github.repository_owner }}/repos'
+          TEMPLATE: |
+            echo "# Contributors by Repository"
+            echo
+            echo "A huge thanks to all and colaborators who have contributed on GitHub!"
+            echo
+            {{range .}}
+            echo "## {{.full_name}}"
+            echo
+            gh api '/repos/{{.full_name}}/contributors' --jq '.[].login' | sort -u | xargs -ILOGIN gh api '/users/LOGIN' --jq '"- @" + .login + " (" + (.name // .login) + ")"'
+            echo
+            {{end}}
+
       - name: "Generate a changelog.md file"
         run: gh api "${ENDPOINT}" --template "${TEMPLATE}" | tee changelog.md
         env:
@@ -105,9 +121,17 @@ jobs:
       - name: "Create generated HTML files"
         run: |
           make -f - << \EOF
+          .PHONY: all text-to-markdown markdown-to-html
 
-          all: $(patsubst %.md,%.html,$(wildcard *.md */*.md */*/*.md))
+          all: text-to-markdown markdown-to-html
           	rm -f header.html
+
+          markdown-to-html: $(patsubst %.md,%.html,$(wildcard *.md */*.md */*/*.md))
+
+          text-to-markdown: $(patsubst %.txt,%.md,$(wildcard *.txt */*.txt */*/*.txt))
+
+          %.md: %.txt
+          	cp $< $@
 
           %.html: %.md
           	pandoc --metadata-file=authors.yaml --template=GitHub.html5 --include-in-header=header.html --from markdown+yaml_metadata_block+backtick_code_blocks+fenced_code_attributes+inline_notes+emoji-implicit_figures --to html --standalone $< --output $@
@@ -117,9 +141,12 @@ jobs:
       - name: "Create redirect HTML files"
         run: |
           make -f - << \EOF
+          .PHONY: all redirect-to-html
 
-          all: $(patsubst %.redirect,%.html,$(wildcard *.redirect */*.redirect */*/*.redirect))
+          all: redirect-to-html
           	rm -f redirect.html $(wildcard *.redirect */*.redirect */*/*.redirect)
+
+          redirect-to-html: $(patsubst %.redirect,%.html,$(wildcard *.redirect */*.redirect */*/*.redirect))
 
           %.html: %.redirect
           	@echo "Generating $@..."
