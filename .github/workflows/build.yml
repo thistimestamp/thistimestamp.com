@@ -127,10 +127,8 @@ jobs:
           	rm -f header.html
 
           markdown-to-html: $(patsubst %.md,%.html,$(wildcard *.md */*.md */*/*.md))
-          	@echo Markdown2HTML: $<
 
-          text-to-markdown: $(patsubst %.txt,%.md,$(wildcard *.txt */*.txt */*/*.txt)) $(patsubst %.txt,%.html,$(wildcard *.txt */*.txt */*/*.txt))
-          	@echo PlainText2Markdown: $<
+          text-to-markdown: $(patsubst %.txt,%.html,$(wildcard *.txt */*.txt */*/*.txt))
 
           %.md: %.txt
           	cp $< $@
